@@ -21,8 +21,8 @@ import * as mongoose from 'mongoose';
     }), // 환경변수 사용시 process.env.환경변수명 형태로 사용해야한다.
     CatsModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  // controllers: [AppController],
+  // providers: [AppService],
 })
 export class AppModule implements NestModule {
   private readonly mode: boolean = process.env.MODE === 'dev' ? true : false;

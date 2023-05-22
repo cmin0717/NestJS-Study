@@ -1,6 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { SchemaOptions, Document } from 'mongoose';
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import { IsEmail, IsString, IsNotEmpty } from 'class-validator';
+
 // 클래스 벨리데이션
 // npm i --save class-validator class-transformer를 하여 벨리데이터 라이브러리를 가져온다.
 // 스키마를 작성시 prop과 타입으로 유효성검사를 하긴 하지만 클래스 벨리데이터를 사용하여 실행전에 한번더 검사를 진행하는것
@@ -16,6 +18,11 @@ const options: SchemaOptions = {
 // 스키마 데코레이터를 사용하고 몽구스의 Document를 상속하여 스키마를 정의한다.
 @Schema(options)
 export class Cat extends Document {
+  // 가입시 입력한 이메일
+  @ApiProperty({
+    example: 'abc@gmail.com',
+    description: '회원 가입시 입력한 이메일',
+  })
   // Prop데코레이터를 이용하여 db인자를 설계한다. prop매개변수에 인자의 옵션을 설정할수있다.
   @Prop({
     required: true,
@@ -25,6 +32,11 @@ export class Cat extends Document {
   @IsNotEmpty()
   email: string; // email은 스트링하나만으로 벨리데이션을 해줄수없다. 그렇기에 라이브러리를 사용하여 클래스 벨리데이션을 한다.
 
+  // 가입시 입력한 이름
+  @ApiProperty({
+    example: 'chuchu',
+    description: '회원 가입시 입력한 이름',
+  })
   @Prop({
     required: true,
   })
@@ -32,6 +44,11 @@ export class Cat extends Document {
   @IsNotEmpty()
   name: string;
 
+  // 가입시 입력한 비밀번호
+  @ApiProperty({
+    example: '12321341',
+    description: 'id',
+  })
   @Prop({
     required: true,
   })
@@ -39,6 +56,7 @@ export class Cat extends Document {
   @IsNotEmpty()
   password: string;
 
+  // 이미지 URL
   @Prop()
   imgUrl: string;
 
