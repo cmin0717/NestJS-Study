@@ -40,6 +40,7 @@ export class AuthService {
     // 디코드된 payload에는 payload에 넣어준 객체값과 만료 기간등을 객체로 가지고 있다.
     const payload = { email: email, id: cat.id };
     // jwtService에서 제공하는 sign메서드에 payload를 넣어 토큰을 생성한다.
+    // 토큰을 프론트엔드로 보내주면 프론트엔드에서는 로컬스토리지 혹은 Httponly쿠키와 같이 안전한곳에 보관하여 통신할때 사용하게된다.
     return { token: this.jwtService.sign(payload) };
   }
 }

@@ -39,4 +39,13 @@ export class CatsRepository {
     const cat = await this.catModel.findOne({ email });
     return cat;
   }
+
+  // 해당 id의 정보 가져오기 (몽고DB에서 아이디를 _id로 저장하기에 _id로 접근해야한다.)
+  async catsFindWithId(_id: string): Promise<Cat | null> {
+    // select는 가져온 정보에서 어떤 값을 가져올건지( - 가 있으면 해당 부분만 뺴고 가져온다.)
+    const cat = await this.catModel.findById({ _id }).select('-password');
+    // 아래 쿼리는 해당 id의 정보에서 email과 name만 가져오겠다 ( 띄어쓰기를 통해 구분한다. )
+    // const cat = await this.catModel.findById({ id }).select('email name');
+    return cat;
+  }
 }
