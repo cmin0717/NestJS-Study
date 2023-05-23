@@ -41,4 +41,22 @@ export class CatsService {
     // 버추얼 필드를 사용하여 내가 원하는 형태로 값을 넘겨준다.
     return cat.readOnlyData;
   }
+
+  // 파일 업로드된 것을 디비에 저장후 정보를 리턴
+  async uploadImg(cat: Cat, files: Express.Multer.File[]) {
+    const file_url = files.map(
+      (f) => `http://localhost:8000/media/cats/${f.filename}`,
+    );
+
+    // catRepository를 사용하여 db작업후 새로운 cat정보를 받는다.
+    const newcat = await this.catsRepository.catsUpdateImg(cat.id, file_url);
+    return newcat;
+  }
+
+  // 모든 고양이 사진 들고 오기
+  async getAllCats() {
+    const allcat: Cat[] = await this.catsRepository.allCatsImgs();
+    const readOnlyCats = allcat.map((cat) => cat.readOnlyData);
+    return readOnlyCats;
+  }
 }

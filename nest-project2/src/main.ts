@@ -6,9 +6,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule, OpenAPIObject } from '@nestjs/swagger';
 // _1.default is not a function에러가 나온다면 아래와 같이 받아보면 된다.(tsconfig 컴파일옵션을 변경하거나)
 import * as expressBasicAuth from 'express-basic-auth';
+import * as path from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // create 제네릭에 NestExpressApplication를 사용하여 해당 app은 express app과 동일하다고 인식시켜준다.
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // 글로벌 미들웨어 설치
   app.use(globalMiddleware);
 
@@ -42,6 +45,15 @@ async function bootstrap() {
   const document: OpenAPIObject = SwaggerModule.createDocument(app, config);
   // 생성한 document와 app, 그리고 swagger의 엔드포인트를 SwaggerModule.setup를 사용하여 열어준다.
   SwaggerModule.setup('docs', app, document);
+
+  // static 파일 사용하기
+  // 서버에 있는 static파일들을 제공하기 위해서는 미들웨어를 추가해주어야한다.
+  // useStaticAssets를 사용하기 위해서는 app이 express app이라는걸 타입으로 알려주어야한다.
+  // static 파일을 제공 하려면 http://localhost:8000/cats/upload/aaa.png 와 같은 형태로 주어져야한다.
+  app.useStaticAssets(path.join(__dirname, './common', 'upload'), {
+    // prefix를 사용하여 디폴트로 엔드포인트에 해당 prefix를 더해주는것
+    prefix: '/media',
+  });
 
   // cors 설정
   app.enableCors({

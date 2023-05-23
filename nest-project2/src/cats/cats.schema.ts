@@ -58,11 +58,16 @@ export class Cat extends Document {
 
   // 이미지 URL
   @Prop()
-  imgUrl: string;
+  imgUrl: string[];
 
   // 사실 아무 의미 없는것( 실제 디비에 들어가지 않는다. )
   // 나중에 사용하기 편하도록 세팅해 두는것 실제 역활은 아래서 만든 virtual('readOnlyData')가 하는것이다.
-  readonly readOnlyData: { id: string; email: string; name: string };
+  readonly readOnlyData: {
+    id: string;
+    email: string;
+    name: string;
+    imgUrl: string[];
+  };
 }
 
 // 정의된 클래스 스키마를 SchemaFactory.createForClass(Cat)를 사용하여 실제 스키마로 만든다.
@@ -77,5 +82,6 @@ CatSchema.virtual('readOnlyData').get(function (this: Cat) {
     id: this.id,
     email: this.email,
     name: this.name,
+    imgUrl: this.imgUrl,
   };
 });

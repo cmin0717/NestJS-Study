@@ -1,3 +1,4 @@
+import { multerOptions } from './../common/utils/multer.options';
 import { CurrentUser } from './../common/decorators/user.decorator';
 // import { Request } from 'express';
 import { CatResponsetDto } from './dto/cats.response.dto';
@@ -7,6 +8,7 @@ import {
   Controller,
   Get,
   Post,
+  UploadedFiles,
   UseFilters,
   UseGuards,
   UseInterceptors,
@@ -21,6 +23,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Cat } from './cats.schema';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -76,12 +79,31 @@ export class CatsController {
   //   return 'logout';
   // }
 
-  @Post('upload/:id')
+  @Post('upload')
   @ApiOperation({
     summary: '이미지 업로드',
     description: '유저 고양이 이미지 업로드 API',
   })
-  uploadCatImg() {
-    return 'upload cat img';
+  // UseInterceptors 인터셉터와 FileInterceptor 데코레이터를 사용하여 file추출
+  // 단일 파일 추출
+  // @UseInterceptors(FileInterceptor(보낼때 이미지 필드명, 파일 갯수 옵션, 멀터 옵션)) -> @UploadedFile() file: Express.Multer.File를 사용하여 받아온 파일을 인자로 받는다.
+  // 다중 파일 추출
+  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+  // 로그인한 유저만 가능한 API이므로
+  @UseGuards(JwtAuthGuard)
+  uploadCatImg(
+    @UploadedFiles() files: Express.Multer.File[],
+    @CurrentUser() cat: Cat,
+  ) {
+    return this.catsService.uploadImg(cat, files);
+  }
+
+  @Get('all')
+  @ApiOperation({
+    summary: '모든 고양이 사진',
+    description: 'DB에 모든 유저 고양이 사진 가져오기',
+  })
+  getAllCats() {
+    return this.catsService.getAllCats();
   }
 }

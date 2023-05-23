@@ -48,4 +48,19 @@ export class CatsRepository {
     // const cat = await this.catModel.findById({ id }).select('email name');
     return cat;
   }
+
+  // cats 이미지 URL 변경
+  async catsUpdateImg(_id: string, files_url: string[]) {
+    const cat = await this.catModel.findById({ _id });
+    cat.imgUrl = files_url;
+    // save 메서드로 위에서 변경한 정보를 저장한다.
+    const newcat = await cat.save();
+    return newcat.readOnlyData;
+  }
+
+  // all cats이미지 가져오기
+  async allCatsImgs() {
+    const allcat = await this.catModel.find();
+    return allcat;
+  }
 }
