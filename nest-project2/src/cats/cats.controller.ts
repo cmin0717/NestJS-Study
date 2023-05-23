@@ -13,13 +13,18 @@ import { HttpExceptionFilter } from 'src/common/exceptions/exceptions.filter';
 // import { PositiveIntpipe } from 'src/common/pipe/positiveInt.pipe';
 import { SuccessInterceptor } from 'src/common/interceptors/success.interceptor';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
 @ApiTags('Cats API') // 제목 토글 같은 느낌(API의 단위 태그)
 export class CatsController {
-  constructor(private readonly catsService: CatsService) {}
+  constructor(
+    private readonly catsService: CatsService,
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   @ApiOperation({
@@ -46,10 +51,11 @@ export class CatsController {
     return await this.catsService.signUp(body);
   }
 
+  // authService에서 만든 로그인 로직을 가져와서 사용한다.
   @Post('login')
   @ApiOperation({ summary: '로그인', description: '로그인 API' })
-  logIn() {
-    return 'login';
+  async logIn(@Body() data: LoginRequestDto) {
+    return await this.authService.jwtLogIn(data);
   }
 
   @Post('logout')

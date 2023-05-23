@@ -33,4 +33,10 @@ export class CatsRepository {
       throw new HttpException('db error', 400);
     }
   }
+
+  // 해당 이메일이 있는지 체크
+  async catsFindEmail(email: string): Promise<Cat | null> {
+    const cat = await this.catModel.findOne({ email });
+    return cat;
+  }
 }
