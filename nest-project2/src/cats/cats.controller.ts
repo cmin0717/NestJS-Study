@@ -24,6 +24,7 @@ import { LoginRequestDto } from 'src/auth/dto/login.request.dto';
 import { JwtAuthGuard } from 'src/auth/jwt/jwt.guard';
 import { Cat } from './cats.schema';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { CatAwsService } from './cats.awss3';
 
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
@@ -33,6 +34,7 @@ export class CatsController {
   constructor(
     private readonly catsService: CatsService,
     private readonly authService: AuthService,
+    private readonly catAwsService: CatAwsService,
   ) {}
 
   @Get()
@@ -88,14 +90,16 @@ export class CatsController {
   // 단일 파일 추출
   // @UseInterceptors(FileInterceptor(보낼때 이미지 필드명, 파일 갯수 옵션, 멀터 옵션)) -> @UploadedFile() file: Express.Multer.File를 사용하여 받아온 파일을 인자로 받는다.
   // 다중 파일 추출
-  @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats')))
+  // @UseInterceptors(FilesInterceptor('image', 10, multerOptions('cats'))) // 로컬 파일 저장 할때
+  @UseInterceptors(FilesInterceptor('image', 10)) // s3 파일 저장할때
   // 로그인한 유저만 가능한 API이므로
   @UseGuards(JwtAuthGuard)
-  uploadCatImg(
+  async uploadCatImg(
     @UploadedFiles() files: Express.Multer.File[],
-    @CurrentUser() cat: Cat,
+    // @CurrentUser() cat: Cat, 로컬 파일 저장시 사용(jwt토큰에서 사용자 정보 가져오는건데 현재는 필요없다.)
   ) {
-    return this.catsService.uploadImg(cat, files);
+    // return this.catsService.uploadImg(cat, files); 로컬 저장시
+    return await this.catAwsService.uploadFileToS3('cats', files);
   }
 
   @Get('all')
