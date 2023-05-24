@@ -55,7 +55,7 @@ export class CatsService {
 
   // 모든 고양이 사진 들고 오기
   async getAllCats() {
-    const allcat: Cat[] = await this.catsRepository.allCatsImgs();
+    const allcat: Cat[] = await this.catsRepository.allCats();
     const readOnlyCats = allcat.map((cat) => cat.readOnlyData);
     return readOnlyCats;
   }

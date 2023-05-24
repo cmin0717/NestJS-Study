@@ -6,6 +6,7 @@ import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { CommentsModule } from './comments/comments.module';
 import * as mongoose from 'mongoose';
 
 @Module({
@@ -22,6 +23,7 @@ import * as mongoose from 'mongoose';
     }), // 환경변수 사용시 process.env.환경변수명 형태로 사용해야한다.
     CatsModule,
     AuthModule,
+    CommentsModule,
   ],
   // controllers: [AppController],
   // providers: [AppService],

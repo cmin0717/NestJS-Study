@@ -1,3 +1,4 @@
+import { CommentSchema } from './../comments/comments.schema';
 import { CatsRepository } from './cats.repository';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module, forwardRef } from '@nestjs/common';
@@ -6,12 +7,17 @@ import { CatsService } from './cats.service';
 import { Cat, CatSchema } from './cats.schema';
 import { AuthModule } from 'src/auth/auth.module';
 import { MulterModule } from '@nestjs/platform-express/multer';
+import { Comment } from 'src/comments/comments.schema';
 
 @Module({
   // 현재 모듈에서 사용할 스키마를 MongooseModule.forFeature를 사용하여 주입해주어야한다.
   // []안에 객체 형태로 어떤 스키마를 등록할지 정한다.
   imports: [
-    MongooseModule.forFeature([{ name: Cat.name, schema: CatSchema }]),
+    MongooseModule.forFeature([
+      { name: Cat.name, schema: CatSchema },
+      // Comment 컬렉션을 Cat컬렉션에 연결해서 사용하기위해 불러온다.
+      { name: Comment.name, schema: CommentSchema },
+    ]),
     // authservice를 사용하기 위해 불러온다. 현재 순환 참조 상태이기에 forwardRef를 사용해주어야한다.
     forwardRef(() => AuthModule),
 

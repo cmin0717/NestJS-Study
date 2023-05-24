@@ -68,20 +68,47 @@ export class Cat extends Document {
     name: string;
     imgUrl: string[];
   };
+
+  readonly commentList: Comment[];
 }
 
-// 정의된 클래스 스키마를 SchemaFactory.createForClass(Cat)를 사용하여 실제 스키마로 만든다.
-export const CatSchema = SchemaFactory.createForClass(Cat);
+const _CatSchema = SchemaFactory.createForClass(Cat);
 
-// 몽구스의 버주얼 필드 생성
-// CatSchema와 같이 실제 생성된 스키마에 virtual('생성 메서드 이름')를 통해 원하는 형태로 값을 가져올수있는 메서드를 만든다.
-// virtual().get()을 사용하여 get안에서 this로 해당 스키마를 받고 스키마에서 원하는 값만 리턴하거나 값을 한번 처리하여 전달해줄수있게된다.
-CatSchema.virtual('readOnlyData').get(function (this: Cat) {
-  // 화살표 함수에서는 this를 사용할 수 없기에 func형태로 선언한다.
+_CatSchema.virtual('readOnlyData').get(function (this: Cat) {
   return {
     id: this.id,
     email: this.email,
     name: this.name,
     imgUrl: this.imgUrl,
+    comments: this.commentList, //r 가져온 comment도 넣어준다.
   };
 });
+
+// comment컬렉션의 버추얼 필드 생성
+// populate할때 버추얼 필드명을 사용한다.
+// 해당 버추얼 필드 조건에 만족하는 애들을 가져올수있게 하는거 같다.
+_CatSchema.virtual('commentList', {
+  ref: 'comments', // ref에는 어떤 컬렉션에서 가져올건지
+  localField: '_id', // 나의 '_id'필드의 값과
+  foreignField: 'info', // 가져온 'info'필드의 값이 같은값을
+});
+_CatSchema.set('toObject', { virtuals: true }); // 객체로 변환이 가능하게
+_CatSchema.set('toJSON', { virtuals: true }); // json형태로 변환이 가능하게
+
+export const CatSchema = _CatSchema;
+
+// // 정의된 클래스 스키마를 SchemaFactory.createForClass(Cat)를 사용하여 실제 스키마로 만든다.
+// export const CatSchema = SchemaFactory.createForClass(Cat);
+
+// // 몽구스의 버주얼 필드 생성
+// // CatSchema와 같이 실제 생성된 스키마에 virtual('생성 메서드 이름')를 통해 원하는 형태로 값을 가져올수있는 메서드를 만든다.
+// // virtual().get()을 사용하여 get안에서 this로 해당 스키마를 받고 스키마에서 원하는 값만 리턴하거나 값을 한번 처리하여 전달해줄수있게된다.
+// CatSchema.virtual('readOnlyData').get(function (this: Cat) {
+//   // 화살표 함수에서는 this를 사용할 수 없기에 func형태로 선언한다.
+//   return {
+//     id: this.id,
+//     email: this.email,
+//     name: this.name,
+//     imgUrl: this.imgUrl,
+//   };
+// });

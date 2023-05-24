@@ -47,7 +47,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, document);
 
   // static 파일 사용하기
-  // 서버에 있는 static파일들을 제공하기 위해서는 미들웨어를 추가해주어야한다.
+  // url로 서버에 있는 static파일에 접근하면 파일을 제공하기 위해서는 미들웨어를 추가해주어야한다.
   // useStaticAssets를 사용하기 위해서는 app이 express app이라는걸 타입으로 알려주어야한다.
   // static 파일을 제공 하려면 http://localhost:8000/cats/upload/aaa.png 와 같은 형태로 주어져야한다.
   app.useStaticAssets(path.join(__dirname, './common', 'upload'), {
