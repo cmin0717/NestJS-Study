@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,9 @@ async function bootstrap() {
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   // hbs로 탬플릿 엔진 설정
   app.setViewEngine('hbs');
+
+  // class-validator 사용하기 위한 글로벌 파이브 설치
+  app.useGlobalPipes(new ValidationPipe());
 
   await app.listen(process.env.PORT);
 }
