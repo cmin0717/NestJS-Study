@@ -1,0 +1,17 @@
+{{! 현재 템플릿은 HTML이 아닌 hbs임으로 파일 명을 hbs확장자를 써야한다. }}
+{{! 나중에 렌더링 될때 알아서 HTML로 변환되어서 브라우저에 넘어가게된다.(서버 사이드 렌더링) }}
+{{!-- 변수 사용시 {{}}를 사용해야한다. --}}
+
+<html lang='en'>
+  <head>
+    <meta charset='UTF-8' />
+    <title>{{data.title}}</title>
+    {{!-- main에서 각 파일들의 경로를 정해주었기에 아래와 같이 바로 접근 가능하다. --}}
+    <link href='css/styles.css' rel='stylesheet' />
+    <script src="js/scripts.js" ></script>
+  </head>
+  <body>
+    <h1>Hello World!!</h1>
+    {{data.copyright}}
+  </body>
+</html>
