@@ -10,7 +10,7 @@
 - Nest JS에서 JWT를 이용한 로그인, Swagger 연습, 몽구스를 이용한 CRUD
 
 ### nest-project3 
-- Nest JS에서 SocketIO를 이용한 실시간 채팅 구현
+- Nest JS에서 MVC패턴, SocketIO를 이용한 실시간 채팅 구현
 
 ### nest-project4 
 - Nest JS에서 TypeORM연습
