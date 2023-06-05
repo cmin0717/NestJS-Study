@@ -29,7 +29,7 @@ import { CatAwsService } from './cats.awss3';
 @Controller('cats')
 @UseInterceptors(SuccessInterceptor)
 @UseFilters(HttpExceptionFilter)
-@ApiTags('Cats API') // 제목 토글 같은 느낌(API의 단위 태그)
+@ApiTags('Cats API') // Swagger의 제목 토글 같은 느낌(API의 단위 태그)
 export class CatsController {
   constructor(
     private readonly catsService: CatsService,
